@@ -1,0 +1,6 @@
+.DS_Store
+vendor
+composer.json
+composer.lock
+.settings/com.aptana.editor.php.prefs
+.project
