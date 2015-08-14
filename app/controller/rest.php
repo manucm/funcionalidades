@@ -12,8 +12,23 @@
 		// Obtenemos todos los datos de la tabla
 		$registros = $datos->all_dates();
 		
+		Kint::dump($registros);
+		
 		foreach ($registros as $key => $value) {
-			$registros[$key]['opciones']= '<div><i class="fa fa-search"></i> <i class="fa fa-pencil"></i> <i class="fa fa-trash-o"></i></div>';
+			
+			//$host = $app->request()->getHost(); 
+			$url = $app->urlFor('show-one', array('rested'=>$rested, 'id'=>$value[$columnas[0]]));
+			$url_edit = $app->urlFor('edit', array('rested'=>$rested, 'id'=>$value[$columnas[0]]));
+			$url_delete = $app->urlFor('delete', array('id'=>$value[$columnas[0]]));
+			$borrado = "'Desea borrar la pregunta'";
+			
+			$registros[$key]['opciones']= '<a href="'.$url.'"><i class="fa fa-search cursor"></i></a>   '.
+										   '<a href="'.$url_edit.'"><i class="fa fa-pencil cursor"></i></a>   '.  
+										   '<form class="in-line" method="post" action="'.$url_delete.'"> '.
+										   '<input type="hidden" name="_METHOD" value="DELETE"/>'.
+										   '<label for="borrar'.$value[$columnas[0]].'"><i class="fa fa-trash-o"></i></label>'.
+										   '<button style="display:none" id="borrar'.$value[$columnas[0]].'" type="submit" onClick="return confirm('.$borrado.');"></button>'.
+										   '</form>   ';
 		}
 		
 		// Enviamos los datos a la vista
@@ -47,7 +62,7 @@
 		$elemento = $datos->getById($id);
 		
 		Kint::dump($elemento);
-	});
+	})->name('show-one');
 	
 	/**
 	 * Enviar al formulario de creación
@@ -60,8 +75,8 @@
 	 * Enviar al formulario de edición
 	 */
 	$app->get("/rest/:rested/:id/edit", function() use ($app) {
-		
-	});
+		echo "formulario edicion";
+	})->name('edit');
 	
 	/**
 	 * Actualizar
@@ -80,6 +95,6 @@
 	/**
 	 * Borrado
 	 */
-	$app->delete("/rest", function() use ($app) {
-		
-	});
+	$app->delete("/rest/:id", function($id) use ($app) {
+		echo "Borrado $id";
+	})->name('delete');
