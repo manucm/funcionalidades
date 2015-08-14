@@ -6,7 +6,7 @@
 	$app->get("/rest/:rested", function($rested) use ($app) {
 		
 		// Obtenemos los datos de la clase Metadatos
-		$datos = new Metadatos($rested); $array = array('opciones');
+		$datos = new Acceso_datos($rested); $array = array('opciones');
 		$columnas = $datos->add_optionsTocolumnas_tabla($array);
 		
 		// Obtenemos todos los datos de la tabla
@@ -21,7 +21,7 @@
 	 */
 	$app->get("/rest/:rested/json", function($rested) use ($app) {
 		// Obtenemos los datos de la clase Metadatos
-		$datos = new Metadatos($rested); $array = array('opciones');
+		$datos = new Acceso_datos($rested); $array = array('opciones');
 		$columnas = $datos->columnas_tabla();
 		
 		// Obtenemos todos los datos de la tabla
@@ -36,8 +36,13 @@
 	/**
 	 * Mostrar un elemento
 	 */
-	$app->get("/rest/:rested/:id", function() use ($app) {
+	$app->get("/rest/:rested/:id", function($rested, $id) use ($app) {
 		
+		$datos = new Acceso_datos($rested);
+		
+		$elemento = $datos->getById($id);
+		
+		Kint::dump($elemento);
 	});
 	
 	/**

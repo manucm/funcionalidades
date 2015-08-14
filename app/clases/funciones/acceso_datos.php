@@ -1,6 +1,6 @@
 <?php
 
-	class Metadatos {
+	class Acceso_datos {
 		
 		// Propiedades
 		private $_tabla;
@@ -70,5 +70,10 @@
 		 	
 		 	return $this->_obj_tabla->factory()
 							 ->find_array();
+		 }
+		 
+		 public function getById($id) {
+		 	return $this->_obj_tabla->factory()
+						->find_one($id);
 		 }
 	}
