@@ -12,6 +12,10 @@
 		// Obtenemos todos los datos de la tabla
 		$registros = $datos->all_dates();
 		
+		foreach ($registros as $key => $value) {
+			$registros[$key]['opciones']= '<div><i class="fa fa-search"></i> <i class="fa fa-pencil"></i> <i class="fa fa-trash-o"></i></div>';
+		}
+		
 		// Enviamos los datos a la vista
 		$app->render('layout.html.twig', array('registros'=>$registros, 'columnas'=>$columnas));	
 	});

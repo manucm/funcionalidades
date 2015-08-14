@@ -2,6 +2,14 @@
 <html>
 	<head>
 		<title>{{ title }}</title>
+		
+	
+		
+		{% block style %}
+			<link rel="stylesheet" href="/css/font-awesome.min.css">
+		{% endblock %}
+		
+		
 	</head>
 	<body>
 		<p>El título es {{ title }}</p>
@@ -21,10 +29,13 @@
 						<td>{{ regi.id_producto }}</td>
 						<td>{{ regi.codigo_barras }}</td>
 						<td>{{ regi.cantidad }}</td>
+						<td>{{ regi.opciones | raw }}</td>
 					</tr>
 				{% else %}
 					<p>No hay registros</p>
 				{% endfor %}
+				
+				
 			</tbody>
 		</table>
 	</body>
