@@ -76,4 +76,37 @@
 		 	return $this->_obj_tabla->factory()
 						->find_one($id);
 		 }
+		 
+		 public function getArrayById($id) {
+		 	return $this->_obj_tabla->factory()
+						->find_one($id)
+						->as_array();
+		 }
+		 
+		 public function save(array $array, $id=false) {
+		 	
+			// Caso crear
+			if (!$id) {
+				$new = $this->_obj_tabla->factory()
+							->create();
+				foreach ($array as $key => $value) {
+					$new->set($key, $value);
+				}
+				$new->save();
+			} else { // Caso actualizar
+				$update = $this->getById($id);
+				
+				foreach ($array as $key => $value) {
+					if ($key != "_METHOD")
+						$update->set($key, $value);
+				}
+				$update->save();
+			}
+		 }
+		 
+		 public function delete($id) {
+		 		$delete = $this->getById($id);
+				
+				$delete->delete();
+		 }
 	}

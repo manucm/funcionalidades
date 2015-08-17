@@ -15,38 +15,6 @@
 	<body>
 		<p>El título es {{ title }}</p>
 
-		<table>
-			<thead>
-				<tr>
-					{% for colum in columnas %}
-						<th>{{ colum }}</th>
-					{% endfor %}
-				</tr>
-			</thead>
-
-			<tbody>
-				{% for regi in registros %}
-				{#
-					<tr>
-						
-						<td>{{ regi.id_producto }}</td>
-						<td>{{ regi.codigo_barras }}</td>
-						<td>{{ regi.cantidad }}</td>
-						<td>{{ regi.opciones | raw }}</td>
-					</tr> #}
-					<tr>
-					
-					{% for colum in columnas %}
-						<td>{{ regi[colum] | raw }}</td>
-					{% endfor %}
-				</tr>
-					
-				{% else %}
-					<p>No hay registros</p>
-				{% endfor %}
-				
-				
-			</tbody>
-		</table>
+		{% block content %} {% endblock content %}
 	</body>
 </html>

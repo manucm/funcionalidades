@@ -1,0 +1,11 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+
+	{% for colum in columnas %}
+		<div>{{ colum }} : {{ elemento[colum] }}</div>
+
+	{% else %}
+		<p>No hay registros</p>
+	{% endfor %}
+{% endblock %}

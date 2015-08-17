@@ -12,14 +12,13 @@
 		// Obtenemos todos los datos de la tabla
 		$registros = $datos->all_dates();
 		
-		Kint::dump($registros);
 		
 		foreach ($registros as $key => $value) {
 			
 			//$host = $app->request()->getHost(); 
 			$url = $app->urlFor('show-one', array('rested'=>$rested, 'id'=>$value[$columnas[0]]));
 			$url_edit = $app->urlFor('edit', array('rested'=>$rested, 'id'=>$value[$columnas[0]]));
-			$url_delete = $app->urlFor('delete', array('id'=>$value[$columnas[0]]));
+			$url_delete = $app->urlFor('delete', array('rested'=>$rested, 'id'=>$value[$columnas[0]]));
 			$borrado = "'Desea borrar la pregunta'";
 			
 			$registros[$key]['opciones']= '<a href="'.$url.'"><i class="fa fa-search cursor"></i></a>   '.
@@ -32,8 +31,10 @@
 		}
 		
 		// Enviamos los datos a la vista
-		$app->render('layout.html.twig', array('registros'=>$registros, 'columnas'=>$columnas));	
-	});
+		$app->render('rest/index.html.twig', array('registros'=>$registros, 
+													'columnas'=>$columnas,
+													'rested'=>$rested));	
+	})->name('index');
 	
 	/**
 	 * Petición, enviamos json
@@ -53,48 +54,97 @@
 	});
 	
 	/**
+	 * Enviar al formulario de creación
+	 */
+	$app->get("/rest/:rested/new", function($rested) use ($app) {
+		
+		// Obtenemos la instancia del acceso a datos
+		$datos = new Acceso_datos($rested);
+		
+		// Obtenemos las columnas de la tabla
+		$columnas = $datos->columnas_tabla();
+		
+		// Pasamos a la vista
+		$app->render('rest/new.html.twig', array('title'=>'Crear '.$rested,
+												  'rested'=>$rested,
+												  'columnas'=>$columnas));
+	});
+	
+	/**
 	 * Mostrar un elemento
 	 */
 	$app->get("/rest/:rested/:id", function($rested, $id) use ($app) {
 		
+		// Obtenemos la instancia del acceso a datos
 		$datos = new Acceso_datos($rested);
 		
-		$elemento = $datos->getById($id);
+		// Obtenemos las columnas de la tabla
+		$columnas = $datos->columnas_tabla();
 		
-		Kint::dump($elemento);
+		// Obtenemos los datos del elemento
+		$elemento = $datos->getArrayById($id);
+		
+		// Pasamos a la vista
+		$app->render('rest/show.html.twig', array('title'=>'Visualizar '.$rested,
+												  'elemento'=>$elemento,
+												  'columnas'=>$columnas));
 	})->name('show-one');
-	
-	/**
-	 * Enviar al formulario de creación
-	 */
-	$app->get("/rest/:rested/new", function() use ($app) {
-		
-	});
 	
 	/**
 	 * Enviar al formulario de edición
 	 */
-	$app->get("/rest/:rested/:id/edit", function() use ($app) {
-		echo "formulario edicion";
+	$app->get("/rest/:rested/:id/edit", function($rested, $id) use ($app) {
+		// Obtenemos la instancia del acceso a datos
+		$datos = new Acceso_datos($rested);
+		
+		// Obtenemos las columnas de la tabla
+		$columnas = $datos->columnas_tabla();
+		
+		// Obtenemos los datos del elemento
+		$elemento = $datos->getArrayById($id);
+		
+		// Pasamos a la vista
+		$app->render('rest/edit.html.twig', array('title'=>'Editar '.$rested,
+												  'rested'=>$rested,
+												  'id'=>$id,
+												  'elemento'=>$elemento,
+												  'columnas'=>$columnas));
 	})->name('edit');
 	
 	/**
 	 * Actualizar
 	 */
-	$app->put("/rest/:rested/:id/update", function() use ($app) {
+	$app->put("/rest/:rested/:id/update", function($rested, $id) use ($app) {
+		// Obtenemos la instancia del acceso a datos
+		$datos = new Acceso_datos($rested);
 		
+		// Guardamos los datos que se han enviado por post
+		$datos->save($_POST, $id);
+		
+		$app->redirect($app->urlFor('index', array('rested'=>$rested)));
 	});
 	
 	/**
 	 * Crear
 	 */
-	$app->post("/rest/created", function() use ($app) {
+	$app->post("/rest/:rested/create", function($rested) use ($app) {
+		// Obtenemos la instancia del acceso a datos
+		$datos = new Acceso_datos($rested);
 		
+		// Guardamos los datos que se han enviado por post
+		$datos->save($_POST);
+		
+		$app->redirect($app->urlFor('index', array('rested'=>$rested)));
 	});
 	
 	/**
 	 * Borrado
 	 */
-	$app->delete("/rest/:id", function($id) use ($app) {
-		echo "Borrado $id";
+	$app->delete("/rest/:rested/:id", function($rested, $id) use ($app) {
+		$datos = new Acceso_datos($rested);
+		
+		// Guardamos los datos que se han enviado por post
+		$datos->delete($id);
+		
+		$app->redirect($app->urlFor('index', array('rested'=>$rested)));
 	})->name('delete');

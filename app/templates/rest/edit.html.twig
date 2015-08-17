@@ -1,0 +1,18 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+	
+	<form method="post" action="/rest/{{ rested }}/{{ id }}/update" >
+		<input type="hidden" name="_METHOD" value="PUT"/>
+		{% for colum in columnas %}
+			<div>
+				<label for="col_{{ colum }}">{{ colum }}</label> 
+				 <input id="col_{{ colum }}" name="{{ colum }}" value="{{ elemento[colum] }}"> 
+			</div>
+		{% else %}
+			<p>No hay registros</p>
+		{% endfor %}
+
+		<input type="submit" value="editar">
+	</form>
+{% endblock %}
