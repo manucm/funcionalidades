@@ -1,14 +1,10 @@
 <?php
 	
 	require_once __DIR__."/rest.php";
+	require_once __DIR__."/get_data.php";
 	
 	$app->get("/", function() use ($app) {
 		
-		$objProducto = new Productos();
-		
-		$producto = $objProducto->getById('ES101');
-		//$producto = Productos::factory()->find_array();
-		Kint::dump($producto);
 		
 		
 		
