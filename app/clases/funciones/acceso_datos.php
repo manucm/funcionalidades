@@ -90,6 +90,7 @@
 				$new = $this->_obj_tabla->factory()
 							->create();
 				foreach ($array as $key => $value) {
+					if ($value != "")
 					$new->set($key, $value);
 				}
 				$new->save();
@@ -97,7 +98,7 @@
 				$update = $this->getById($id);
 				
 				foreach ($array as $key => $value) {
-					if ($key != "_METHOD")
+					if ($key != "_METHOD" && $value != "")
 						$update->set($key, $value);
 				}
 				$update->save();
